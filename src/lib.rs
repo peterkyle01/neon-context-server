@@ -10,20 +10,6 @@ use zed_extension_api::{
 struct NeonContextServerSettings {
     #[serde(default, alias = "neon_api_key")]
     NEON_API_KEY: String,
-    #[serde(default, alias = "neon_project_id")]
-    NEON_PROJECT_ID: String,
-    #[serde(default = "default_database", alias = "neon_database")]
-    NEON_DATABASE: String,
-    #[serde(default, alias = "neon_branch")]
-    NEON_BRANCH: String,
-    #[serde(default, alias = "database_url")]
-    DATABASE_URL: String,
-    #[serde(default, alias = "neon_api_host")]
-    NEON_API_HOST: String,
-}
-
-fn default_database() -> String {
-    "neondb".to_string()
 }
 
 struct NeonContextServerExtension;
@@ -42,7 +28,7 @@ impl zed::Extension for NeonContextServerExtension {
         let Some(settings) = settings.settings else {
             return Err("missing `NEON_API_KEY` setting".into());
         };
-        let settings: NeonContextServerSettings =
+        let s: NeonContextServerSettings =
             serde_json::from_value(settings).map_err(|e| e.to_string())?;
 
         let binary = concat!(env!("CARGO_MANIFEST_DIR"), "/neon-context-server").to_string();
@@ -50,14 +36,7 @@ impl zed::Extension for NeonContextServerExtension {
         Ok(Command {
             command: binary,
             args: vec![],
-            env: vec![
-                ("NEON_API_KEY".into(), settings.NEON_API_KEY),
-                ("NEON_PROJECT_ID".into(), settings.NEON_PROJECT_ID),
-                ("NEON_DATABASE".into(), settings.NEON_DATABASE),
-                ("NEON_BRANCH".into(), settings.NEON_BRANCH),
-                ("DATABASE_URL".into(), settings.DATABASE_URL),
-                ("NEON_API_HOST".into(), settings.NEON_API_HOST),
-            ],
+            env: vec![("NEON_API_KEY".into(), s.NEON_API_KEY)],
         })
     }
 

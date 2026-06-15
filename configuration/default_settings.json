@@ -1,8 +1,3 @@
 {
-  "NEON_API_KEY": "",
-  "NEON_PROJECT_ID": "",
-  "NEON_DATABASE": "neondb",
-  "NEON_BRANCH": "",
-  "DATABASE_URL": "",
-  "NEON_API_HOST": ""
+  "NEON_API_KEY": ""
 }
