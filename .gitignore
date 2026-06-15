@@ -3,3 +3,4 @@
 neon-context-server
 extension.wasm
 Cargo.lock
+/server/Cargo.lock
