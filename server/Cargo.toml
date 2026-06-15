@@ -1,0 +1,23 @@
+[package]
+name = "neon-context-server"
+version = "0.1.0"
+edition = "2021"
+description = "Neon context server MCP binary"
+license = "MIT"
+
+[[bin]]
+name = "neon-context-server"
+path = "src/main.rs"
+
+[dependencies]
+tokio = { version = "1", features = ["full"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+reqwest = { version = "0.12", features = ["json"] }
+url = "2"
+
+[profile.release]
+opt-level = "s"
+lto = true
+codegen-units = 1
+strip = true
