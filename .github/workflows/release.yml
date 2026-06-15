@@ -18,7 +18,7 @@ jobs:
           - os: macos-latest
             target: aarch64-apple-darwin
             asset-name: neon-context-server-macos-arm64
-          - os: macos-13
+          - os: macos-latest
             target: x86_64-apple-darwin
             asset-name: neon-context-server-macos-x86_64
 
@@ -41,7 +41,7 @@ jobs:
           cp server/target/${{ matrix.target }}/release/neon-context-server dist/
           cd dist && tar czf ../${{ matrix.asset-name }}.tar.gz neon-context-server
 
-      - name: Upload to release
+      - name: Upload
         uses: softprops/action-gh-release@v1
         with:
           files: ${{ matrix.asset-name }}.tar.gz
