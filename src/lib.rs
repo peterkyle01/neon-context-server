@@ -121,14 +121,10 @@ impl NeonContextServerExtension {
             }
         }
 
-        // Dev fallback
-        let dev = format!("{}/{}", env!("CARGO_MANIFEST_DIR"), BINARY);
-        if fs::metadata(&dev).map_or(false, |m| m.is_file()) {
-            self.cached = Some(dev.clone());
-            return Ok(dev);
-        }
-
-        Err(format!("{BINARY} not found. Build: cd server && cargo build --release && cp target/release/{BINARY} .."))
+        // Dev fallback: binary at the extension source root
+        let dev = format!("{}/{BINARY}", env!("CARGO_MANIFEST_DIR"));
+        self.cached = Some(dev.clone());
+        return Ok(dev);
     }
 }
 

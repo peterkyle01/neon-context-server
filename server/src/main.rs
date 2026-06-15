@@ -131,7 +131,7 @@ async fn main() {
             id,
             result,
         };
-        writeln!(out, "{}", serde_json::to_string(&resp).unwrap()).ok();
+        writeln!(out, "{}", serde_json::to_string(&resp).unwrap_or_default()).ok();
         out.flush().ok();
     }
 }

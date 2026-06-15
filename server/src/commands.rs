@@ -3,21 +3,20 @@ use crate::neon_client::NeonClient;
 use serde_json::Value;
 use std::collections::HashSet;
 
-#[derive(Debug, Clone, serde::Serialize)]
-#[serde(tag = "type")]
+#[derive(Debug)]
 pub enum ContextItem {
-    #[serde(rename = "title")]
-    Title { text: String },
-    #[serde(rename = "header")]
-    Header { text: String },
-    #[serde(rename = "text")]
-    Text { text: String },
-    #[serde(rename = "table")]
+    Title {
+        text: String,
+    },
+    Header {
+        text: String,
+    },
+    Text {
+        text: String,
+    },
     Table {
         header: Vec<String>,
         rows: Vec<Vec<String>>,
-        #[serde(skip_serializing_if = "Option::is_none")]
-        summary: Option<String>,
     },
 }
 
@@ -32,11 +31,7 @@ impl ContextItem {
         Self::Text { text: text.into() }
     }
     pub fn table(header: Vec<String>, rows: Vec<Vec<String>>) -> Self {
-        Self::Table {
-            header,
-            rows,
-            summary: None,
-        }
+        Self::Table { header, rows }
     }
 }
 
@@ -218,7 +213,9 @@ fn strip_line_comments(sql: &str) -> String {
     while i < chars.len() {
         if i + 1 < chars.len() && chars[i] == '-' && chars[i + 1] == '-' {
             // Skip until end of line
-            while i < chars.len() && chars[i] != '\n' { i += 1; }
+            while i < chars.len() && chars[i] != '\n' {
+                i += 1;
+            }
         } else {
             out.push(chars[i]);
             i += 1;
@@ -276,18 +273,6 @@ fn clean_error(e: &str) -> String {
 // ── P2: Row limit ──
 
 const DEFAULT_ROW_LIMIT: usize = 500;
-
-fn enforce_row_limit(items: &mut Vec<ContextItem>) {
-    for item in items.iter_mut() {
-        if let ContextItem::Table { rows, summary, .. } = item {
-            if rows.len() > DEFAULT_ROW_LIMIT {
-                let total = rows.len();
-                rows.truncate(DEFAULT_ROW_LIMIT);
-                *summary = Some(format!("Showing {DEFAULT_ROW_LIMIT} of {total} rows. Add `LIMIT` / `OFFSET` to your query for more."));
-            }
-        }
-    }
-}
 
 // ── P1: Schema-qualified table name parsing ──
 
@@ -423,7 +408,6 @@ async fn handle_query(
 
     let columns = result.column_names();
     let rows = result.rows_as_strings();
-    let row_count = result.row_count();
 
     let mut items = Vec::new();
     if columns.is_empty() {

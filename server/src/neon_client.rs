@@ -57,18 +57,8 @@ struct ListProjectsResponse {
 }
 
 #[derive(Debug, Deserialize)]
-struct ProjectResponse {
-    project: Project,
-}
-
-#[derive(Debug, Deserialize)]
 struct ListBranchesResponse {
     branches: Vec<Branch>,
-}
-
-#[derive(Debug, Deserialize)]
-struct BranchResponse {
-    branch: Branch,
 }
 
 #[derive(Debug, Deserialize)]
@@ -153,30 +143,6 @@ impl NeonClient {
         Ok(data.projects)
     }
 
-    pub async fn get_project(&self, project_id: &str) -> Result<Project, String> {
-        let url = format!("{}/projects/{project_id}", self.api_base);
-        let resp = self
-            .http
-            .get(&url)
-            .bearer_auth(self.api_key.as_deref().unwrap_or(""))
-            .send()
-            .await
-            .map_err(|e| format!("API request failed: {e}"))?;
-
-        if !resp.status().is_success() {
-            let status = resp.status();
-            let body = resp.text().await.unwrap_or_default();
-            return Err(format!("Neon API error {status}: {body}"));
-        }
-
-        let data: ProjectResponse = resp
-            .json()
-            .await
-            .map_err(|e| format!("Failed to parse project: {e}"))?;
-
-        Ok(data.project)
-    }
-
     pub async fn list_branches(&self, project_id: &str) -> Result<Vec<Branch>, String> {
         let url = format!("{}/projects/{project_id}/branches", self.api_base);
         let resp = self
@@ -199,33 +165,6 @@ impl NeonClient {
             .map_err(|e| format!("Failed to parse branches: {e}"))?;
 
         Ok(data.branches)
-    }
-
-    pub async fn get_branch(&self, project_id: &str, branch_id: &str) -> Result<Branch, String> {
-        let url = format!(
-            "{}/projects/{project_id}/branches/{branch_id}",
-            self.api_base
-        );
-        let resp = self
-            .http
-            .get(&url)
-            .bearer_auth(self.api_key.as_deref().unwrap_or(""))
-            .send()
-            .await
-            .map_err(|e| format!("API request failed: {e}"))?;
-
-        if !resp.status().is_success() {
-            let status = resp.status();
-            let body = resp.text().await.unwrap_or_default();
-            return Err(format!("Neon API error {status}: {body}"));
-        }
-
-        let data: BranchResponse = resp
-            .json()
-            .await
-            .map_err(|e| format!("Failed to parse branch: {e}"))?;
-
-        Ok(data.branch)
     }
 
     pub async fn list_databases(
