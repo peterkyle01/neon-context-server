@@ -9,6 +9,7 @@ use serde_json::{json, Value};
 use std::io::{self, BufRead, Write};
 
 #[derive(Debug, Deserialize)]
+#[allow(dead_code)]
 struct RpcMessage {
     jsonrpc: String,
     #[serde(default)]

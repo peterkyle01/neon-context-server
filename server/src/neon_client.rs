@@ -12,6 +12,7 @@ pub struct NeonClient {
 
 /// Represents a parsed Postgres connection URI.
 #[derive(Debug, Clone)]
+#[allow(dead_code)]
 pub struct ConnectionInfo {
     pub host: String,
     pub port: u16,
@@ -22,6 +23,7 @@ pub struct ConnectionInfo {
 
 /// Represents a Neon project summary from the API.
 #[derive(Debug, Clone, Deserialize)]
+#[allow(dead_code)]
 pub struct Project {
     pub id: String,
     pub name: String,
@@ -31,6 +33,7 @@ pub struct Project {
 
 /// Represents a Neon branch.
 #[derive(Debug, Clone, Deserialize)]
+#[allow(dead_code)]
 pub struct Branch {
     pub id: String,
     pub name: String,
@@ -42,6 +45,7 @@ pub struct Branch {
 
 /// Represents a database in a Neon project.
 #[derive(Debug, Clone, Deserialize)]
+#[allow(dead_code)]
 pub struct Database {
     pub id: u64,
     pub name: String,
@@ -85,6 +89,7 @@ pub(crate) struct SqlQuery {
 ///
 /// Rows are returned as JSON objects (`{"col": val, ...}`) keyed by column name.
 #[derive(Debug, Deserialize)]
+#[allow(dead_code)]
 pub struct SqlResponse {
     pub command: Option<String>,
     pub fields: Option<Vec<Field>>,
@@ -94,6 +99,7 @@ pub struct SqlResponse {
 }
 
 #[derive(Debug, Clone, Deserialize)]
+#[allow(dead_code)]
 pub struct Field {
     pub name: String,
     #[serde(rename = "dataTypeID")]
