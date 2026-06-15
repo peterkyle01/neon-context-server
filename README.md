@@ -1,6 +1,6 @@
 # neon-context-server
 
-Zed extension for [Neon](https://neon.tech) serverless Postgres to query databases, explore schemas, list projects and branches.
+Community zed extension for [Neon](https://neon.tech) serverless Postgres to query databases, explore schemas, list projects and branches.
 
 ## Configuration
 
@@ -17,7 +17,3 @@ Requires a [Neon API key](https://console.neon.tech/app/settings?modal=create_ap
   }
 }
 ```
-
-## Credits
-
-Community extension by [Peter Kyle](peterkyle01.me).
